@@ -17,6 +17,9 @@ func main() {
 func setup() {
 	var apiKey string
 
+	fmt.Print("thisis a test:")
+	fmt.Scan(&apiKey)
+
 	if _, err := os.Stat("settings.mjw"); err == nil {
 		// file exists and read in.
 		file, err := os.Open("settings.mjw")
@@ -43,11 +46,28 @@ func setup() {
 		}
 	} else {
 		getCreds(&apiKey)
+		var saveCreds string
+
+		fmt.Println()
+		fmt.Print("Would you like to save your API key for easier access next time?  (Y/n)")
+		fmt.Scan(&saveCreds)
+
+		if saveCreds == "Y" || saveCreds == "y" {
+			// write file
+			file, err := os.Create("settings.mjw")
+			defer file.Close()
+
+			if err != nil {
+				panic(err)
+			}
+
+			fmt.Fprintln(file, apiKey)
+		}
 	}
 }
 
-func getCreds(username *string) {
+func getCreds(apiKey *string) {
 	// io to get creds
 	fmt.Print("Please enter your API key: ")
-	fmt.Scan(&username)
+	fmt.Scan(apiKey)
 }
